@@ -1,0 +1,56 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.container {
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+.bottom-navigation {
+  position: fixed;
+  width: 100%;
+  bottom: 0;
+}
+
+.object-cover {
+  object-fit: cover;
+}
+
+.image-container {
+  position: relative;
+  width: 100%;
+  height: 600px; /* Adjust the height as needed */
+  overflow: hidden;
+}
+
+.liked {
+  color: red; /* Change this to your desired color */
+}
+
+.add-comment-input {
+  border-radius: 20px;
+}
