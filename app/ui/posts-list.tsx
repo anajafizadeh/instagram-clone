@@ -19,7 +19,7 @@ import CommentsList from "./comments-list";
 
 export default function PostsList({ posts }: { posts: any[] }) {
   const [postList, setPostList] = useState(posts);
-  const [openCommentsPostId, setOpenCommentsPostId] = useState<number | null>(
+  const [openCommentsPostId, setOpenCommentsPostId] = useState<string | null>(
     null
   );
 
@@ -31,7 +31,7 @@ export default function PostsList({ posts }: { posts: any[] }) {
     return post.comments.length;
   }
 
-  const handleLike = (postId: number) => {
+  const handleLike = (postId: string) => {
     setPostList((currentPosts) =>
       currentPosts.map((post) => {
         if (post.id !== postId) {
@@ -52,7 +52,7 @@ export default function PostsList({ posts }: { posts: any[] }) {
     );
   };
 
-  const handleComment = (postId: number) => {
+  const handleComment = (postId: string) => {
     setOpenCommentsPostId(postId);
   };
 
@@ -62,24 +62,24 @@ export default function PostsList({ posts }: { posts: any[] }) {
 
   const handleAddComment = (comment: string) => {
     if (openCommentsPostId === null) {
-        return;
+      return;
     }
 
     setPostList((currentPosts) =>
-        currentPosts.map((post) =>
+      currentPosts.map((post) =>
         post.id === openCommentsPostId
-            ? {
-                ...post,
-                comments: [
+          ? {
+              ...post,
+              comments: [
                 ...post.comments,
                 {
-                    username: 'current_user',
-                    comment,
+                  username: "current_user",
+                  comment,
                 },
-                ],
+              ],
             }
-            : post
-        )
+          : post
+      )
     );
   };
 
@@ -91,7 +91,11 @@ export default function PostsList({ posts }: { posts: any[] }) {
     <>
       <Box
         className="mt-2.5"
-        sx={{ display: "flex", flexDirection: "column", gap: 2 }}
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          gap: 2,
+        }}
       >
         {postList.map((post) => {
           const isLiked = post.likes.includes("current_user");
@@ -99,7 +103,10 @@ export default function PostsList({ posts }: { posts: any[] }) {
           return (
             <Card
               key={post.id}
-              sx={{ display: "flex", flexDirection: "column" }}
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+              }}
             >
               <div className="flex items-center">
                 <Avatar
@@ -115,7 +122,10 @@ export default function PostsList({ posts }: { posts: any[] }) {
 
                 <Typography
                   variant="body1"
-                  sx={{ fontWeight: 400, marginLeft: 1 }}
+                  sx={{
+                    fontWeight: 400,
+                    marginLeft: 1,
+                  }}
                 >
                   {post.username || "Username"}
                 </Typography>
@@ -125,7 +135,7 @@ export default function PostsList({ posts }: { posts: any[] }) {
                 component="img"
                 height="200"
                 width="100%"
-                image={post.image}
+                image={post.image_url}
                 alt={post.title}
                 className="object-cover image-container"
               />
@@ -171,9 +181,14 @@ export default function PostsList({ posts }: { posts: any[] }) {
               </div>
 
               <CardContent>
-                <Typography variant="h6">{post.title}</Typography>
+                <Typography variant="h6">
+                  {post.title}
+                </Typography>
 
-                <Typography variant="body2" color="text.secondary">
+                <Typography
+                  variant="body2"
+                  color="text.secondary"
+                >
                   {post.description}
                 </Typography>
               </CardContent>
