@@ -19,6 +19,18 @@ export async function getUserByUsername(username: string): Promise<User | null> 
   return user[0] || null;
 }
 
+export async function getUserByEmail(
+  email: string
+): Promise<User | null> {
+  const user = await sql<User[]>`
+    SELECT *
+    FROM users
+    WHERE email = ${email}
+  `;
+
+  return user[0] || null;
+}
+
 export async function createUser(
   username: string,
   email: string,

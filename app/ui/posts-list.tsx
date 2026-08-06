@@ -16,6 +16,8 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import "../globals.css";
 import CommentsList from "./comments-list";
+import { addCommentAction } from "../lib/actions/comments/actions";
+import { toggleLikeAction } from "../lib/actions/likes/actions";
 
 export default function PostsList({ posts }: { posts: any[] }) {
   const [postList, setPostList] = useState(posts);
@@ -31,26 +33,41 @@ export default function PostsList({ posts }: { posts: any[] }) {
     return post.comments.length;
   }
 
-  const handleLike = (postId: string) => {
+  const handleLike = async (postId: string) => {
+    const userId = "10000000-0000-0000-0000-000000000002";
+    const username = "sarah";
+
+    const selectedPost = postList.find((post) => post.id === postId);
+
+    if (!selectedPost) {
+        return;
+    }
+
+    const isCurrentlyLiked = selectedPost.likes.includes(username);
+
+    const result = await toggleLikeAction(
+        postId,
+        userId,
+        isCurrentlyLiked
+    );
+
     setPostList((currentPosts) =>
-      currentPosts.map((post) => {
+        currentPosts.map((post) => {
         if (post.id !== postId) {
-          return post;
+            return post;
         }
 
-        const isLiked = post.likes.includes("current_user");
-
         return {
-          ...post,
-          likes: isLiked
-            ? post.likes.filter(
-                (username: string) => username !== "current_user"
-              )
-            : [...post.likes, "current_user"],
+            ...post,
+            likes: result.liked
+            ? [...post.likes, username]
+            : post.likes.filter(
+                (likedUsername: string) => likedUsername !== username
+                ),
         };
-      })
+        })
     );
-  };
+    };
 
   const handleComment = (postId: string) => {
     setOpenCommentsPostId(postId);
@@ -60,26 +77,34 @@ export default function PostsList({ posts }: { posts: any[] }) {
     setOpenCommentsPostId(null);
   };
 
-  const handleAddComment = (comment: string) => {
+  const handleAddComment = async (comment: string) => {
     if (openCommentsPostId === null) {
-      return;
+        return;
     }
 
+    const newComment = await addCommentAction(
+        openCommentsPostId,
+        '10000000-0000-0000-0000-000000000002',
+        comment
+    );
+
     setPostList((currentPosts) =>
-      currentPosts.map((post) =>
+        currentPosts.map((post) =>
         post.id === openCommentsPostId
-          ? {
-              ...post,
-              comments: [
+            ? {
+                ...post,
+                comments: [
                 ...post.comments,
                 {
-                  username: "current_user",
-                  comment,
+                    id: newComment.id,
+                    username: 'current_user',
+                    comment: newComment.comment,
+                    created_at: newComment.created_at,
                 },
-              ],
+                ],
             }
-          : post
-      )
+            : post
+        )
     );
   };
 
@@ -98,7 +123,7 @@ export default function PostsList({ posts }: { posts: any[] }) {
         }}
       >
         {postList.map((post) => {
-          const isLiked = post.likes.includes("current_user");
+          const isLiked = post.likes.includes("sarah");
 
           return (
             <Card

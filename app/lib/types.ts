@@ -2,6 +2,7 @@ export interface User {
   id: string;
   username: string;
   email: string;
+  password: string;
   avatar_url: string | null;
   created_at: Date;
 }
@@ -23,4 +24,11 @@ export interface Post {
   created_at: Date;
   likes: string[];
   comments: Comment[];
+}
+
+export interface Like {
+  id: string;
+  post_id: string;
+  user_id: string;
+  created_at: Date;
 }

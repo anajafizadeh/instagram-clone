@@ -9,8 +9,15 @@ import {
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import InboxIcon from '@mui/icons-material/Inbox';
+import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew';
+import { signOut } from 'next-auth/react';
 
 export default function Header() {
+  const handleSignOut = async () => {
+    await signOut({
+      callbackUrl: '/login',
+    });
+  };
   return (
     <AppBar
       position="static"
@@ -35,8 +42,8 @@ export default function Header() {
         }}
       >
         <Box sx={{ justifySelf: 'start' }}>
-          <IconButton aria-label="Create post" value="add">
-            <AddIcon />
+          <IconButton aria-label="Log out" value="logout" onClick={handleSignOut}>
+            <PowerSettingsNewIcon />
           </IconButton>
         </Box>
 
